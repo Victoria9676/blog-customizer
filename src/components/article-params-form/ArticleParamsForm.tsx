@@ -21,10 +21,19 @@ import {
 
 import styles from './ArticleParamsForm.module.scss';
 
-export const ArticleParamsForm = () => {
+type ArticleParamsFormProps = {
+	currentState: ArticleStateType;
+	onApply: (state: ArticleStateType) => void;
+	onReset: () => void;
+};
+
+export const ArticleParamsForm = ({
+	currentState,
+	onApply,
+	onReset,
+}: ArticleParamsFormProps) => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
-	const [formState, setFormState] =
-		useState<ArticleStateType>(defaultArticleState);
+	const [formState, setFormState] = useState<ArticleStateType>(currentState);
 	const rootRef = useRef<HTMLDivElement>(null);
 
 	// Закрытие по клику вне и по Escape
@@ -39,7 +48,7 @@ export const ArticleParamsForm = () => {
 		};
 
 		const handleEscape = (e: KeyboardEvent) => {
-			if (e.key == 'Escape') {
+			if (e.key === 'Escape') {
 				setIsMenuOpen(false);
 			}
 		};
@@ -60,15 +69,15 @@ export const ArticleParamsForm = () => {
 		setFormState((prev) => ({ ...prev, [field]: value }));
 	};
 
-	// Заглушка
 	const handleSubmit = (e: FormEvent) => {
 		e.preventDefault();
+		onApply(formState);
 	};
 
-	// Заглушка
 	const handleReset = (e: FormEvent) => {
 		e.preventDefault();
 		setFormState(defaultArticleState);
+		onReset();
 	};
 
 	return (
